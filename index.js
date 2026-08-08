@@ -1,9 +1,14 @@
 import express from "express";
 
 const app = express();
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Yoalalalala");
+});
+app.post("/", (req, res) => {
+  let body = req.body;
+  res.send("hello");
 });
 
 app.listen(3000, () => {
