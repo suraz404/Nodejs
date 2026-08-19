@@ -21,6 +21,10 @@ app.use((req, res, next) => {
   next(); // 👈 Continue to the next middleware/route
 });
 
+app.post("/", (req, res) => {
+  res.json({ sucess: true });
+});
+
 app.listen(PORT, () => {
   console.log("Server Started");
 });
