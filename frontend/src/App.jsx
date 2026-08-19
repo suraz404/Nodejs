@@ -1,9 +1,10 @@
+import axios from "axios";
+
 const App = () => {
   const getResponse = async () => {
-    const res = await fetch("http://localhost:8000/");
-    const data = await res.json();
+    const res = await axios.get("http://localhost:8000/");
 
-    console.log(data);
+    console.log(res);
   };
 
   return (
