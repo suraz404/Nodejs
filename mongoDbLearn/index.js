@@ -32,6 +32,10 @@ app.post("/create", async (req, res) => {
   } catch (error) {
     res.status(400).json({ error });
   }
+  app.post("/create/:name", async (req, res) => {
+    const userSelect = User.findOne({ name: req.params.name });
+    return res.json({ userSelect });
+  });
 });
 
 app.listen(PORT, () => {
