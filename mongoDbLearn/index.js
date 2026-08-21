@@ -33,9 +33,25 @@ app.post("/create", async (req, res) => {
     res.status(400).json({ error });
   }
   app.post("/create/:name", async (req, res) => {
-    const userSelect = User.findOne({ name: req.params.name });
+    const userSelect = await User.findOne({ name: req.params.name });
     return res.json({ userSelect });
   });
+  app.put("/update", async (req, res) => {
+    try {
+      let { name, age, email } = req.body;
+      let user = await User.updateOne({ email }, { name, age });
+      res.json(user);
+    } catch (error) {
+      res.json({ message: error });
+    }
+  });
+});
+app.delete("/delete", async (req, res) => {
+  try {
+    let { name } = req.body;
+    let user = await User.delete({ name });
+    res.json({ user });
+  } catch (error) {}
 });
 
 app.listen(PORT, () => {
