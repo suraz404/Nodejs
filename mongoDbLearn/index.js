@@ -1,21 +1,11 @@
 import express from "express";
-import "dotenv/config";
-import mongoose from "mongoose";
-import { User } from "./models/user.model.js";
-const PORT = 8100;
 
+import { User } from "./models/user.model.js";
+import connectDb from "./config/db.js";
 const app = express();
 app.use(express.json());
-const url = process.env.URL;
 
-const connectDb = async () => {
-  try {
-    await mongoose.connect(url);
-    console.log("Db connected");
-  } catch (error) {
-    console.log("error", error);
-  }
-};
+const Port = process.env.PORT;
 
 app.get("/", (req, res) => {
   res.send({ sucess: true });
@@ -54,7 +44,7 @@ app.delete("/delete", async (req, res) => {
   } catch (error) {}
 });
 
-app.listen(PORT, () => {
+app.listen(Port, () => {
   connectDb();
   console.log("Server is running");
 });
