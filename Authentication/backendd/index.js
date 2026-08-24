@@ -1,14 +1,31 @@
 import express from "express";
 import "dotenv/config";
+
 import connectDb from "./config/db.js";
 import authRouter from "./routes/auth.routes.js";
 
 const app = express();
+
 const PORT = process.env.PORT || 4000;
 
+// Middleware
+app.use(express.json());
+
+// Routes
 app.use("/api", authRouter);
 
-app.listen(PORT, (req, res) => {
-  connectDb();
-  console.log("Server iis running");
-});
+// Start server
+const startServer = async () => {
+  try {
+    await connectDb();
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
