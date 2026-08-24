@@ -1,3 +1,4 @@
+import generateToken from "../config/token.js";
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
@@ -7,9 +8,9 @@ export const signup = async (req, res) => {
     const { firstName, lastName, userName, email, password } = req.body;
 
     // Check if user already exists
-    const existUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email });
 
-    if (existUser) {
+    if (existingUser) {
       return res.status(400).json({
         message: "User already exists",
       });
@@ -22,15 +23,27 @@ export const signup = async (req, res) => {
     const newUser = await User.create({
       firstName,
       lastName,
-      email,
       userName,
+      email,
       password: hashedPassword,
+    });
+
+    // Generate token
+    const token = generateToken(newUser._id);
+
+    // Store token in cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     // Send response
     return res.status(201).json({
       message: "User created successfully",
       user: {
+        id: newUser._id,
         firstName: newUser.firstName,
         lastName: newUser.lastName,
         email: newUser.email,
@@ -38,7 +51,7 @@ export const signup = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("Signup error:", error);
 
     return res.status(500).json({
       message: "Internal server error",
