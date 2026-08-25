@@ -58,3 +58,49 @@ export const signup = async (req, res) => {
     });
   }
 };
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    let existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      return res.status(400).json({ message: "User doesnot exist" });
+    }
+    let match = await bcrypt.compare(password, existingUser.password);
+
+    if (!match) {
+      return res.status(400).json({ message: "Incorrect Password" });
+    }
+    const token = generateToken(existingUser._id);
+
+    // Store token in cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    return res.status(200).json({
+      message: "User found successfully",
+      user: {
+        id: existingUser._id,
+        firstName: existingUser.firstName,
+        lastName: existingUser.lastName,
+        email: existingUser.email,
+        userName: existingUser.userName,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "INternal server error" });
+  }
+};
+
+export const logout = (req, res) => {
+  try {
+    res.clearCookie("token");
+    res.status(200).json({ message: "User Log out succesfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Log out Failed" });
+  }
+};
