@@ -1,13 +1,37 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import dp from "../assets/dp.jpg";
+import DataContext from "../context/DataContext";
+import axios from "axios";
 
 export const SignUp = () => {
+  const { serverUrl } = useContext(DataContext);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      console.log(serverUrl);
+      let data = await axios.post(
+        `${serverUrl}/api/signup`,
+        {
+          firstName,
+          lastName,
+          userName,
+          email,
+          password,
+        },
+        { withCredentials: true },
+      );
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#09090b] px-4 py-10">
@@ -29,7 +53,7 @@ export const SignUp = () => {
 
         {/* Form Card */}
         <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-2xl sm:p-8">
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleSignUp}>
             {/* Profile Picture */}
             <div className="h-[100px] w-[100px] relative overflow-hidden rounded-full border border-white bg-white">
               <img
