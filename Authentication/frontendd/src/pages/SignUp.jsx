@@ -1,6 +1,14 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import dp from "../assets/dp.jpg";
 
 export const SignUp = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#09090b] px-4 py-10">
       <div className="w-full max-w-md">
@@ -22,8 +30,22 @@ export const SignUp = () => {
         {/* Form Card */}
         <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-2xl sm:p-8">
           <form className="space-y-5">
+            {/* Profile Picture */}
+            <div className="h-[100px] w-[100px] relative overflow-hidden rounded-full border border-white bg-white">
+              <img
+                src={dp}
+                className="h-full w-full object-cover"
+                alt="Profile"
+              />
+
+              <div className="absolute top-0 flex h-full w-full cursor-pointer items-center justify-center bg-black text-[16px] font-medium text-white opacity-0 hover:opacity-50">
+                +
+              </div>
+            </div>
+
             {/* First + Last Name */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {/* First Name */}
               <div className="space-y-2">
                 <label
                   htmlFor="firstName"
@@ -34,12 +56,15 @@ export const SignUp = () => {
 
                 <input
                   id="firstName"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
                   type="text"
                   placeholder="Suraj"
                   className="h-11 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 text-sm text-white outline-none placeholder:text-zinc-600 focus:border-white"
                 />
               </div>
 
+              {/* Last Name */}
               <div className="space-y-2">
                 <label
                   htmlFor="lastName"
@@ -50,6 +75,8 @@ export const SignUp = () => {
 
                 <input
                   id="lastName"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                   type="text"
                   placeholder="Agrahari"
                   className="h-11 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 text-sm text-white outline-none placeholder:text-zinc-600 focus:border-white"
@@ -68,6 +95,8 @@ export const SignUp = () => {
 
               <input
                 id="username"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
                 type="text"
                 placeholder="suraz404"
                 className="h-11 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 text-sm text-white outline-none placeholder:text-zinc-600 focus:border-white"
@@ -85,6 +114,8 @@ export const SignUp = () => {
 
               <input
                 id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 type="email"
                 placeholder="you@example.com"
                 className="h-11 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 text-sm text-white outline-none placeholder:text-zinc-600 focus:border-white"
@@ -102,6 +133,8 @@ export const SignUp = () => {
 
               <input
                 id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 type="password"
                 placeholder="••••••••"
                 className="h-11 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 text-sm text-white outline-none placeholder:text-zinc-600 focus:border-white"
@@ -140,21 +173,6 @@ export const SignUp = () => {
               Create account
             </button>
           </form>
-
-          {/* Divider */}
-          <div className="my-6 flex items-center gap-4">
-            <div className="h-px flex-1 bg-zinc-800" />
-            <span className="text-xs text-zinc-500">OR</span>
-            <div className="h-px flex-1 bg-zinc-800" />
-          </div>
-
-          {/* GitHub */}
-          <button
-            type="button"
-            className="flex h-11 w-full items-center justify-center gap-3 rounded-lg border border-zinc-700 bg-zinc-950 text-sm font-medium text-white transition hover:bg-zinc-800"
-          >
-            Continue with GitHub
-          </button>
 
           {/* Login */}
           <p className="mt-6 text-center text-sm text-zinc-400">
