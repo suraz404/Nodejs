@@ -8,9 +8,19 @@ export const signup = async (req, res) => {
     // Get input
     const { firstName, lastName, userName, email, password } = req.body;
 
+    console.log("Signup attempt:", { firstName, lastName, userName, email });
+    console.log("File received:", req.file ? "Yes" : "No");
+
     let profileImage;
     if (req.file) {
-      profilePicture = uploadImage(req.file.path);
+      console.log("Processing profile image from path:", req.file.path);
+      profileImage = await uploadImage(req.file.path);
+      if (!profileImage) {
+        console.log("Profile image upload failed");
+        return res.status(400).json({
+          message: "Failed to upload profile image",
+        });
+      }
     }
 
     // Check if user already exists
@@ -32,7 +42,7 @@ export const signup = async (req, res) => {
       userName,
       email,
       password: hashedPassword,
-      profilePicture,
+      profileImage,
     });
 
     // Generate token
@@ -55,7 +65,7 @@ export const signup = async (req, res) => {
         lastName: newUser.lastName,
         email: newUser.email,
         userName: newUser.userName,
-        profileImage,
+        profileImage: newUser.profileImage,
       },
     });
   } catch (error) {
@@ -63,6 +73,7 @@ export const signup = async (req, res) => {
 
     return res.status(500).json({
       message: "Internal server error",
+      error: error.message,
     });
   }
 };
@@ -97,6 +108,7 @@ export const login = async (req, res) => {
         lastName: existingUser.lastName,
         email: existingUser.email,
         userName: existingUser.userName,
+        profileImage: existingUser.profileImage,
       },
     });
   } catch (error) {
