@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import dp from "../assets/dp.jpg";
 import DataContext from "../context/DataContext";
 import axios from "axios";
@@ -11,6 +11,10 @@ export const SignUp = () => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [frontendImg, setFrontendImg] = useState(dp);
+  const [backendImg, setBackendImg] = useState(null);
+
+  let file = useRef(null);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -31,6 +35,12 @@ export const SignUp = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+  const handleImage = (e) => {
+    let file = e.target.files[0];
+    setBackendImg(file);
+    let image = URL.createObjectURL(file);
+    setFrontendImg(image);
   };
 
   return (
@@ -55,9 +65,13 @@ export const SignUp = () => {
         <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-2xl sm:p-8">
           <form className="space-y-5" onSubmit={handleSignUp}>
             {/* Profile Picture */}
-            <div className="h-[100px] w-[100px] relative overflow-hidden rounded-full border border-white bg-white">
+
+            <div
+              className="relative mx-auto h-[100px] w-[100px] overflow-hidden rounded-full border border-white bg-white"
+              onClick={() => file.current.click()}
+            >
               <img
-                src={dp}
+                src={frontendImg}
                 className="h-full w-full object-cover"
                 alt="Profile"
               />
@@ -145,6 +159,7 @@ export const SignUp = () => {
                 className="h-11 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 text-sm text-white outline-none placeholder:text-zinc-600 focus:border-white"
               />
             </div>
+            <input type="file" hidden ref={file} onChange={handleImage} />
 
             {/* Password */}
             <div className="space-y-2">
