@@ -1,3 +1,4 @@
+import uploadImage from "../config/cloudinary.js";
 import generateToken from "../config/token.js";
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
@@ -6,6 +7,11 @@ export const signup = async (req, res) => {
   try {
     // Get input
     const { firstName, lastName, userName, email, password } = req.body;
+
+    let profileImage;
+    if (req.file) {
+      profilePicture = uploadImage(req.file.path);
+    }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -26,6 +32,7 @@ export const signup = async (req, res) => {
       userName,
       email,
       password: hashedPassword,
+      profilePicture,
     });
 
     // Generate token
@@ -48,6 +55,7 @@ export const signup = async (req, res) => {
         lastName: newUser.lastName,
         email: newUser.email,
         userName: newUser.userName,
+        profileImage,
       },
     });
   } catch (error) {

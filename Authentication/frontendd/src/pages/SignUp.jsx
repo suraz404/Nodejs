@@ -19,21 +19,22 @@ export const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      console.log(serverUrl);
-      let data = await axios.post(
-        `${serverUrl}/api/signup`,
-        {
-          firstName,
-          lastName,
-          userName,
-          email,
-          password,
-        },
-        { withCredentials: true },
-      );
+      let formdata = new FormData();
+      formdata.append("firstName", firstName);
+      formdata.append("lastName", lastName);
+      formdata.append("email", email);
+      formdata.append("userName", userName);
+      formdata.append("password", password);
+      if (backendImg) {
+        formdata.append("profilePicture", backendImg);
+      }
+      let data = await axios.post(`${serverUrl}/api/signup`, formdata, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       console.log(data);
     } catch (error) {
-      console.log(error);
+      console.log(error.response?.data?.message);
     }
   };
   const handleImage = (e) => {
