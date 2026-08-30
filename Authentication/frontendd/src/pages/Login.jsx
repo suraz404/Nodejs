@@ -1,18 +1,19 @@
 import { useContext } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DataContext from "../context/DataContext";
 import axios from "axios";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { serverUrl } = useContext(DataContext);
+  const { serverUrl, setUser, setIsLoggedIn } = useContext(DataContext);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      let data = await axios.post(
+      const response = await axios.post(
         `${serverUrl}/api/login`,
         {
           email,
@@ -20,7 +21,11 @@ export const Login = () => {
         },
         { withCredentials: true },
       );
-      console.log(data);
+
+      const loggedInUser = response.data?.user;
+      setUser(loggedInUser);
+      setIsLoggedIn(true);
+      navigate("/home");
     } catch (error) {
       console.log(error.response?.data?.message);
     }

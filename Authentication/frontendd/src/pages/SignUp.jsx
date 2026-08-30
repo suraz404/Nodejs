@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext, useRef, useState } from "react";
 import dp from "../assets/dp.jpg";
 import DataContext from "../context/DataContext";
 import axios from "axios";
 
 export const SignUp = () => {
-  const { serverUrl } = useContext(DataContext);
+  const { serverUrl, setUser, setIsLoggedIn } = useContext(DataContext);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
@@ -13,6 +13,7 @@ export const SignUp = () => {
   const [password, setPassword] = useState("");
   const [frontendImg, setFrontendImg] = useState(dp);
   const [backendImg, setBackendImg] = useState(null);
+  const navigate = useNavigate();
 
   let file = useRef(null);
 
@@ -28,11 +29,15 @@ export const SignUp = () => {
       if (backendImg) {
         formdata.append("profilePicture", backendImg);
       }
-      let data = await axios.post(`${serverUrl}/api/signup`, formdata, {
+      const response = await axios.post(`${serverUrl}/api/signup`, formdata, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log(data);
+
+      const signedUpUser = response.data?.user;
+      setUser(signedUpUser);
+      setIsLoggedIn(true);
+      navigate("/home");
     } catch (error) {
       console.log(error.response?.data?.message);
     }
