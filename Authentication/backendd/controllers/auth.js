@@ -116,6 +116,29 @@ export const login = async (req, res) => {
   }
 };
 
+export const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        userName: user.userName,
+        profileImage: user.profileImage,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to fetch user" });
+  }
+};
+
 export const logout = (req, res) => {
   try {
     res.clearCookie("token");

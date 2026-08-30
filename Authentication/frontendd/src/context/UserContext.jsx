@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import DataContext from "./DataContext";
 
 const UserContext = ({ children }) => {
@@ -10,6 +11,26 @@ const UserContext = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem("isLoggedIn") === "true";
   });
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        const response = await axios.get(`${serverUrl}/api/me`, {
+          withCredentials: true,
+        });
+
+        const currentUser = response.data?.user;
+        setUser(currentUser || null);
+        setIsLoggedIn(Boolean(currentUser));
+      } catch (error) {
+        console.log(error);
+        setUser(null);
+        setIsLoggedIn(false);
+      }
+    };
+
+    initializeAuth();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("isLoggedIn", String(isLoggedIn));
