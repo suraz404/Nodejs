@@ -11,5 +11,5 @@ const shouldFail = process.argv.includes("--fails");
 const shouldCrash = process.argv.includes("--crash");
 
 process.on("exit", (code) => {
-  console.log(`process is executed in code ${code}`);
+  console.log(`process is executed in code ${code}hi`);
 });
