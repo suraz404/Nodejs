@@ -32,3 +32,11 @@ clearTimeout(timeout);
 
 // When shutting down:
 clearInterval(interval);
+
+import { setTimeout as sleep } from "node:timers/promises";
+
+async function runPromiseTimeExampel2(): Promise<void> {
+  console.log("waiting for promise timer");
+  await sleep(5500);
+  console.log("after promises");
+}
